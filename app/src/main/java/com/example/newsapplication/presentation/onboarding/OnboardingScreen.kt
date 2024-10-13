@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapplication.intent.OnBoardingEvent
 import com.example.newsapplication.presentation.Dimens
 import com.example.newsapplication.presentation.common.Indicator
 import com.example.newsapplication.presentation.common.NewsButtons
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(navController: NavHostController) {
+fun OnboardingScreen(navController: NavHostController, onEvent:(event:OnBoardingEvent)->Unit) {
     val pagerState = rememberPagerState(pageCount = {
         pages.size
     })
@@ -87,8 +88,3 @@ fun OnboardingScreen(navController: NavHostController) {
 
 
 
-@Preview
-@Composable
-fun preview(){
-    OnboardingScreen(rememberNavController())
-}
