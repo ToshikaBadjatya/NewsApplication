@@ -19,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapplication.presentation.Dimens
 import com.example.newsapplication.presentation.common.Indicator
 import com.example.newsapplication.presentation.common.NewsButtons
+import com.example.newsapplication.presentation.navigation.Route
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -73,7 +75,7 @@ fun OnboardingScreen(navController: NavHostController) {
                 if (currentPage.value != pages.size - 1) {
                     coroutineScope.launch { pagerState.scrollToPage(currentPage.value + 1) }
                 } else {
-                    getStarted()
+                    navController.navigate(Route.NewsNavigation.routeName)
                 }
             })
         }
@@ -84,8 +86,7 @@ fun OnboardingScreen(navController: NavHostController) {
 }
 
 
-fun getStarted() {
-}
+
 @Preview
 @Composable
 fun preview(){

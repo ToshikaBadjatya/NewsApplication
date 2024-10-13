@@ -14,5 +14,8 @@ fun Navgraph( modifier: Modifier){
       composable(route=Route.OnBoardingRoute.routeName){
           OnboardingScreen(navController)
       }
+        composable(route=Route.NewsNavigation.routeName){
+            NewsNavigation(modifier)
+        }
     }
 }

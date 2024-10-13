@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.newsapplication.presentation.onboarding.Dimens
+import com.example.newsapplication.presentation.Dimens
 
 @Composable
 fun NewsButtons(modifier: Modifier,
