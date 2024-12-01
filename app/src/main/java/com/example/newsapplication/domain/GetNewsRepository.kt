@@ -5,7 +5,7 @@ import com.example.newsapplication.data.remote.pojo.Article
 import kotlinx.coroutines.flow.Flow
 
 interface GetNewsRepository {
-    suspend fun getNews(sources: String): Flow<PagingData<Article>>
+     fun getNews(sources: String): Flow<PagingData<Article>>
 
     fun searchNews(searchQuery: String, sources: List<String>): Flow<PagingData<Article>>
 }

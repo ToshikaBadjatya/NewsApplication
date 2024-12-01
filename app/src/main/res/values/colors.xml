@@ -69,5 +69,6 @@
     <color name="black33">#333333</color>
     <color name="blueF2">#F2F8FB</color>
     <color name="black1A">#1A1A1A</color>
+    <color name="shimmer">#C3C3C3</color>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.newsapplication.data.remote.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.newsapplication.data.remote.api.GetNewsApi
@@ -17,7 +18,7 @@ class NewsPagingSource(private val newsApi: GetNewsApi, val sources: String):Pag
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         try {
             // Start refresh at page 1 if undefined.
-            val nextPageNumber = params.key ?: 1
+            val nextPageNumber = params.key ?: 0
             val response = newsApi.getNewsApi(
                 page = nextPageNumber,
                 sources =sources,)
@@ -29,6 +30,7 @@ class NewsPagingSource(private val newsApi: GetNewsApi, val sources: String):Pag
                 nextKey = if(total<=totalObtained) nextPageNumber+1 else null
             )
         } catch (e: Exception) {
+            Log.e("status","${e.message}")
             return LoadResult.Error(e)
         }
     }

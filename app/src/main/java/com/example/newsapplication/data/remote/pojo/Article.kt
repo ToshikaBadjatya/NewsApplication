@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 data class NewsResponse(
     val articles: List<Article>,
-    val status: String,
+//    val status: String,
     val totalResults: Int
 )
 @Parcelize

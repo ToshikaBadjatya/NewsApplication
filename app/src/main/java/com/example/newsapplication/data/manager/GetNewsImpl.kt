@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetNewsImpl @Inject constructor(val newsApi:GetNewsApi):GetNewsRepository {
-    override suspend fun getNews(sources: String): Flow<PagingData<Article>> {
+    override  fun getNews(sources: String): Flow<PagingData<Article>> {
         val pagingConfig=PagingConfig(pageSize = 20)
         val pagingSource=NewsPagingSource(newsApi, sources =sources )
         val pager= Pager(config = pagingConfig,null, pagingSourceFactory = {pagingSource})
