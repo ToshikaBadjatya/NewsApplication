@@ -1,4 +1,4 @@
-package com.example.newsapplication.presentation.onboarding
+package com.example.newsapplication.presentation.onboarding.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -17,9 +17,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.newsapplication.presentation.Dimens
+import com.example.newsapplication.presentation.onboarding.data.MyPage
+import com.example.newsapplication.presentation.onboarding.data.pages
 
 @Composable
 fun OnBoardingPage(page: MyPage, modifier: Modifier) {
+
     Column(modifier = modifier,) {
         Image(
             painter = painterResource(id = page.icon), contentDescription = "",

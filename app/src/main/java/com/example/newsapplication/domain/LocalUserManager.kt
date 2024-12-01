@@ -2,7 +2,7 @@ package com.example.newsapplication.domain
 
 import kotlinx.coroutines.flow.Flow
 
-interface UserEntryManager {
+interface LocalUserManager {
     suspend fun  setUserEntry()
     fun getUserEntry(): Flow<Boolean>
 }

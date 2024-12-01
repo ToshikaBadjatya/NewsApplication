@@ -1,4 +1,4 @@
-package com.example.newsapplication.presentation.onboarding
+package com.example.newsapplication.presentation.onboarding.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -16,19 +16,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.newsapplication.intent.OnBoardingEvent
 import com.example.newsapplication.presentation.Dimens
 import com.example.newsapplication.presentation.common.Indicator
 import com.example.newsapplication.presentation.common.NewsButtons
 import com.example.newsapplication.presentation.navigation.Route
+import com.example.newsapplication.presentation.onboarding.data.pages
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(navController: NavHostController, onEvent:(event:OnBoardingEvent)->Unit) {
+fun OnboardingScreen(navController: NavHostController, callEvent:(event:OnBoardingEvent)->Unit) {
     val pagerState = rememberPagerState(pageCount = {
         pages.size
     })
@@ -76,6 +75,7 @@ fun OnboardingScreen(navController: NavHostController, onEvent:(event:OnBoarding
                 if (currentPage.value != pages.size - 1) {
                     coroutineScope.launch { pagerState.scrollToPage(currentPage.value + 1) }
                 } else {
+                    callEvent.invoke(OnBoardingEvent.SaveAppEntry)
                     navController.navigate(Route.NewsNavigation.routeName)
                 }
             })

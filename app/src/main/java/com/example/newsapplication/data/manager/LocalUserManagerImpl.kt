@@ -1,35 +1,32 @@
 package com.example.newsapplication.data.manager
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.newsapplication.domain.UserEntryManager
+import com.example.newsapplication.domain.LocalUserManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.prefs.Preferences
-import javax.sql.DataSource
 
-class UserEntryImpl(val context: Context) :UserEntryManager{
+class LocalUserManagerImpl(val context: Context) :LocalUserManager{
     val Context.datastore by preferencesDataStore(
     name = "prefs"
     )
     override suspend fun setUserEntry() {
       context.datastore.edit {prefs->
-          prefs[booleanPreferencesKey(PrefKeys.HAS_ENTERED_ALREADY)]=true
+          prefs[booleanPreferencesKey(PrefKeys.SHOW_ONBOARDING)]=false
       }
 
     }
 
     override fun getUserEntry(): Flow<Boolean> {
         return context.datastore.data.map {prefs->
-        val data=prefs[booleanPreferencesKey(PrefKeys.HAS_ENTERED_ALREADY)]
-            data?:false
+        val data=prefs[booleanPreferencesKey(PrefKeys.SHOW_ONBOARDING)]
+            data?:true
         }
     }
 }
 object PrefKeys{
-    const val HAS_ENTERED_ALREADY="already_entered"
+    const val SHOW_ONBOARDING="show_onboarding"
 
 }
