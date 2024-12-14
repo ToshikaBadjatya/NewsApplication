@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.newsapplication.domain.usecases.NewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(val newsUseCase: NewsUseCase):ViewModel() {
-    val news = newsUseCase.getNewsUsecase.getNews(
+    val news= newsUseCase.getNewsUsecase.getNews(
         sources = listOf("bbc-news","abc-news","al-jazeera-english")
     ).cachedIn(viewModelScope)
 }

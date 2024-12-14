@@ -1,5 +1,6 @@
 package com.example.newsapplication.presentation.home
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.RepeatMode
@@ -106,42 +107,53 @@ fun ArticleCard(modifier: Modifier, article: Article, onClick: () -> Unit) {
 
 @Composable
 fun ShimmerBox(modifier: Modifier) {
-    Box(modifier = modifier.shimmer())
-//    Row(modifier = modifier
-//        .height(Dimens.ArticleCardSize)
-//        .padding(Dimens.DefaultPadding)){
-//
-//        Box(
-//            modifier = Modifier
-//                .size(Dimens.ArticleCardSize)
-//                .clip(
-//                    RoundedCornerShape(20.dp)
-//                )
-//                .background(color = colorResource(id =R.color.black))
-//        )
-//
-//
-//
-//        Column(
-//            modifier = Modifier
-//                .padding(Dimens.DefaultPadding), verticalArrangement = Arrangement.SpaceAround
-//        ) {
-//
-//            Box(
-//                modifier = Modifier.fillMaxWidth().shimmer()
-//            )
-//        }
-//    }
+
+    Row(modifier = modifier
+        .height(Dimens.ArticleCardSize)
+        .padding(Dimens.DefaultPadding)){
+
+        Box(
+            modifier = Modifier
+                .size(Dimens.ArticleCardSize)
+                .clip(
+                    RoundedCornerShape(20.dp)
+                )
+                .shimmer()
+        )
+
+
+
+        Column(
+            modifier = Modifier
+                .padding(Dimens.DefaultPadding)
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .shimmer()
+            )
+            Spacer(modifier = Modifier.height(Dimens.DefaultPadding))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .shimmer()
+            )
+        }
+    }
 }
 
-fun Modifier.shimmer(): Modifier = composed {
-  val transion= rememberInfiniteTransition()
-    val values=transion.animateFloat(initialValue = 0.5f, targetValue = 1f, animationSpec = infiniteRepeatable(repeatMode = RepeatMode.Reverse, animation = tween(1000)),
-        label = ""
-    ).asFloatState()
-    background(color = colorResource(id =R.color.black,))
-
-    return@composed this
+fun Modifier.shimmer() = composed {
+  val transition= rememberInfiniteTransition()
+    val alpha = transition.animateFloat(
+        initialValue = 0.2f, targetValue = 0.9f, animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000),
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
+    ).value
+    background(color = colorResource(id =R.color.shimmer,).copy(alpha = alpha))
 }
 
 @Preview(showBackground = true)
