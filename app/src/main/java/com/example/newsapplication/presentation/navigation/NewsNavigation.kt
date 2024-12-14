@@ -2,12 +2,9 @@ package com.example.newsapplication.presentation.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,12 +17,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.newsapplication.R
 import com.example.newsapplication.presentation.home.HomeScreen
 import com.example.newsapplication.presentation.viewmodel.NewsViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsNavigation(modifier: Modifier) {
     val context= LocalContext.current
@@ -41,8 +36,17 @@ fun NewsNavigation(modifier: Modifier) {
 
             composable(route = Route.HomeScreen.routeName) {
                 val newsViewModel: NewsViewModel = hiltViewModel()
-                val news=newsViewModel.news.collectAsLazyPagingItems()
-                HomeScreen(navController, news)
+                val pagingData=if(newsViewModel._searchText.isEmpty()){
+                    newsViewModel.news
+                }
+                else{
+                    newsViewModel._searchState.value.pagingData
+                }
+                HomeScreen(navController, pagingData){
+                    newsViewModel.onEvent(it)
+                }
+
+
             }
 
         }

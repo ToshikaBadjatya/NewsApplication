@@ -11,6 +11,7 @@ import com.example.newsapplication.domain.usecases.EntryUseCases
 import com.example.newsapplication.domain.usecases.GetNewsUsecase
 import com.example.newsapplication.domain.usecases.NewsUseCase
 import com.example.newsapplication.domain.usecases.ReadEntryUseCases
+import com.example.newsapplication.domain.usecases.SearchNewsUsecase
 import com.example.newsapplication.domain.usecases.WriteEntryUseCases
 import dagger.Module
 import dagger.Provides
@@ -38,7 +39,7 @@ class AppModule {
     @Provides
     @Singleton
     fun getNewsUseCase(newsRepo: GetNewsRepository): NewsUseCase {
-        return NewsUseCase(GetNewsUsecase(newsRepo))
+        return NewsUseCase(GetNewsUsecase(newsRepo), SearchNewsUsecase(newsRepo))
     }
     @Provides
     @Singleton

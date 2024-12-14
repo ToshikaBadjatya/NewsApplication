@@ -10,9 +10,15 @@ import com.example.newsapplication.domain.LocalUserManager
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-data class NewsUseCase(val getNewsUsecase: GetNewsUsecase)
+data class NewsUseCase(val getNewsUsecase: GetNewsUsecase,val searchNewsUsecase: SearchNewsUsecase)
 class GetNewsUsecase @Inject constructor(private val getNewsRepository: GetNewsRepository){
      fun getNews(sources: List<String>): Flow<PagingData<Article>> {
        return getNewsRepository.getNews(sources = sources.joinToString(","))
+    }
+}
+
+class SearchNewsUsecase @Inject constructor(private val getNewsRepository: GetNewsRepository){
+    fun searchNews(sources: List<String>,search:String): Flow<PagingData<Article>> {
+        return getNewsRepository.searchNews(sources = sources.joinToString(","), searchQuery = search)
     }
 }

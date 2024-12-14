@@ -14,4 +14,11 @@ interface GetNewsApi {
         @Query("page") page: Int,
         @Query("apiKey") apiKey: String = API_KEY
     ): Response<NewsResponse>
+    @GET(Constants.GET_NEWS)
+    suspend fun searchNewsApi(
+        @Query("q") keyWord: String,
+        @Query("page") page: Int,
+        @Query("sources") sources: String,
+        @Query("apiKey") apiKey: String = API_KEY
+    ): Response<NewsResponse>
 }

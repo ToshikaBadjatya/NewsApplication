@@ -70,5 +70,8 @@
     <color name="blueF2">#F2F8FB</color>
     <color name="black1A">#1A1A1A</color>
     <color name="shimmer">#C3C3C3</color>
+    <color name="body">#4E4B66</color>
+    <color name="input_background">#fff</color>
+    <color name="placeholder">#A0A3BD</color>
 
 </resources>
