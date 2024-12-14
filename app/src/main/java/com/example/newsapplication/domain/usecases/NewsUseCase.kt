@@ -13,6 +13,6 @@ import javax.inject.Inject
 data class NewsUseCase(val getNewsUsecase: GetNewsUsecase)
 class GetNewsUsecase @Inject constructor(private val getNewsRepository: GetNewsRepository){
      fun getNews(sources: List<String>): Flow<PagingData<Article>> {
-       return getNewsRepository.getNews(sources = sources.joinToString { "," })
+       return getNewsRepository.getNews(sources = sources.joinToString(","))
     }
 }

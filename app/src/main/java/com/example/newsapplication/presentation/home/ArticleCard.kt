@@ -1,6 +1,7 @@
 package com.example.newsapplication.presentation.home
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -25,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.asFloatState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +58,7 @@ import com.example.newsapplication.presentation.Dimens
 fun ArticleCard(modifier: Modifier, article: Article, onClick: () -> Unit) {
     val ctx = LocalContext.current
 
-    Row(modifier = modifier.height(Dimens.ArticleCardSize)
+    Row(modifier = modifier
         .padding(Dimens.DefaultPadding)
         .clickable { onClick.invoke() }) {
 
@@ -83,35 +85,61 @@ fun ArticleCard(modifier: Modifier, article: Article, onClick: () -> Unit) {
                    modifier = Modifier, text = article.title,
                    style = MaterialTheme.typography.bodyMedium,
                    fontWeight = FontWeight.Bold,
-                   maxLines = 1,
-                   overflow = TextOverflow.Ellipsis
+                   maxLines = 2,
                )
               Spacer(modifier = Modifier.height(10.dp))
+            Row {
+                Text(
+                    modifier = Modifier, text = article.source.name,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Spacer(modifier = Modifier.weight(Dimens.ExtraSmallPadding.value))
+                Text(
+                    modifier = Modifier, text = article.publishedAt,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
 
-            Text(
-                modifier = Modifier, text = article.description,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
         }
     }
 }
 
 @Composable
-fun ShimmerBox(modifier: Modifier, content: @Composable () -> Unit) {
-    Box(modifier = modifier.shimmer()) {
-        content
-    }
+fun ShimmerBox(modifier: Modifier) {
+    Box(modifier = modifier.shimmer())
+//    Row(modifier = modifier
+//        .height(Dimens.ArticleCardSize)
+//        .padding(Dimens.DefaultPadding)){
+//
+//        Box(
+//            modifier = Modifier
+//                .size(Dimens.ArticleCardSize)
+//                .clip(
+//                    RoundedCornerShape(20.dp)
+//                )
+//                .background(color = colorResource(id =R.color.black))
+//        )
+//
+//
+//
+//        Column(
+//            modifier = Modifier
+//                .padding(Dimens.DefaultPadding), verticalArrangement = Arrangement.SpaceAround
+//        ) {
+//
+//            Box(
+//                modifier = Modifier.fillMaxWidth().shimmer()
+//            )
+//        }
+//    }
 }
 
 fun Modifier.shimmer(): Modifier = composed {
-    val transition = rememberInfiniteTransition()
-    val values = transition.animateFloat(
-        initialValue = 0.3f, targetValue = 0.9f,
-        animationSpec = infiniteRepeatable(animation = tween(1000), repeatMode = RepeatMode.Reverse)
-    ).value
-    this.background(color = colorResource(id = R.color.shimmer).copy(values))
+  val transion= rememberInfiniteTransition()
+    val values=transion.animateFloat(initialValue = 0.5f, targetValue = 1f, animationSpec = infiniteRepeatable(repeatMode = RepeatMode.Reverse, animation = tween(1000)),
+        label = ""
+    ).asFloatState()
+    background(color = colorResource(id =R.color.black,))
 
     return@composed this
 }

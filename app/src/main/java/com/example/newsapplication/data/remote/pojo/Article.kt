@@ -4,11 +4,13 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import java.io.Serializable
+@Parcelize
 data class NewsResponse(
     val articles: List<Article>,
 //    val status: String,
     val totalResults: Int
-)
+):Parcelable
 @Parcelize
 @Entity
 data class Article(
