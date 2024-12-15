@@ -31,12 +31,11 @@ class NewsViewModel @Inject constructor(private val newsUseCase: NewsUseCase) : 
     private val searchState = mutableStateOf<SearchState>(SearchState())
     val _searchState : State<SearchState> = searchState
 
+
     fun onEvent(event: NewsEvents) {
         when (event) {
-            is NewsEvents.UpdateSearchText->{
-                searchText.value=event.searchText
-            }
             is NewsEvents.SearchEvent -> {
+                searchText.value=event.searchText
                 val searchFlow = newsUseCase.searchNewsUsecase.searchNews(
                     sources = listOf("bbc-news", "abc-news", "al-jazeera-english"), searchText.value
                 ).cachedIn(viewModelScope)
@@ -44,9 +43,7 @@ class NewsViewModel @Inject constructor(private val newsUseCase: NewsUseCase) : 
             }
 
             is NewsEvents.GetNews -> {
-
-                Log.e("searchEvent","get data called $news")
-                searchState.value.copy( pagingData = news)
+                searchState.value=SearchState( pagingData = news)
             }
 
         }

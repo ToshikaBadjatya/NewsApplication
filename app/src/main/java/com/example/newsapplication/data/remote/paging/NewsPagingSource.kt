@@ -26,6 +26,7 @@ class NewsPagingSource(private val newsApi: GetNewsApi, val sources: String):Pag
                 page = nextPageNumber,
                 sources = sources,
             )
+            Log.e("load","called ${response.body()}")
             if (response.body() != null) {
                 val obj = response.body()!!
                 totalObtained += obj.articles.size
@@ -45,6 +46,8 @@ class NewsPagingSource(private val newsApi: GetNewsApi, val sources: String):Pag
             }
 
         } catch (e: Exception) {
+            Log.e("load","called ${e}")
+
             return LoadResult.Error(e)
         }
     }

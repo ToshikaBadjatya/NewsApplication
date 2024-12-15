@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapplication.R
+import com.example.newsapplication.intent.NewsEvents
 import com.example.newsapplication.presentation.home.HomeScreen
 import com.example.newsapplication.presentation.viewmodel.NewsViewModel
 
@@ -36,19 +37,16 @@ fun NewsNavigation(modifier: Modifier) {
 
             composable(route = Route.HomeScreen.routeName) {
                 val newsViewModel: NewsViewModel = hiltViewModel()
-                val pagingData=if(newsViewModel._searchText.isEmpty()){
-                    newsViewModel.news
+               if(newsViewModel._searchText.isEmpty()){
+                  newsViewModel.onEvent(NewsEvents.GetNews)
                 }
-                else{
-                    newsViewModel._searchState.value.pagingData
-                }
-                HomeScreen(navController, pagingData){
+                HomeScreen(navController, newsViewModel._searchState.value){
                     newsViewModel.onEvent(it)
                 }
-
-
             }
-
+//            composable(route=Route.DetailScreen.routeName){
+////               ItemDetailScreen(navigateUp = {navController.navigateUp()})
+//            }
         }
 
     }

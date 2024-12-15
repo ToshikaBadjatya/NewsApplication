@@ -56,12 +56,12 @@ import com.example.newsapplication.data.remote.pojo.Source
 import com.example.newsapplication.presentation.Dimens
 
 @Composable
-fun ArticleCard(modifier: Modifier, article: Article, onClick: () -> Unit) {
+fun ArticleCard(modifier: Modifier, article: Article, onClick: (Article) -> Unit) {
     val ctx = LocalContext.current
 
     Row(modifier = modifier
         .padding(Dimens.DefaultPadding)
-        .clickable { onClick.invoke() }) {
+        .clickable { onClick.invoke(article) }) {
 
         AsyncImage(
             modifier = Modifier

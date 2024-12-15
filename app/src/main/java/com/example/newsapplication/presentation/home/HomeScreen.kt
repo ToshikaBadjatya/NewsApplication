@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +29,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.newsapplication.R
@@ -36,13 +36,14 @@ import com.example.newsapplication.data.remote.pojo.Article
 import com.example.newsapplication.intent.NewsEvents
 import com.example.newsapplication.presentation.Dimens
 import com.example.newsapplication.presentation.common.ErrorPage
-import kotlinx.coroutines.flow.Flow
+import com.example.newsapplication.presentation.navigation.Route
+import com.example.newsapplication.presentation.viewmodel.SearchState
 
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    pagingData: Flow<PagingData<Article>>?,
+    searchState: SearchState,
     newsEvent: (NewsEvents)->Unit
 ) {
     var searchText by remember {
@@ -61,10 +62,13 @@ fun HomeScreen(
             .fillMaxWidth()
             .padding(Dimens.DefaultPaddingSmall),
             searchText = searchText,
-            onSearch = {newsEvent.invoke(NewsEvents.UpdateSearchText(searchText))},
+            onSearch = {newsEvent.invoke(NewsEvents.SearchEvent(searchText))},
             onTextChange = { searchText = it })
-            val lazyArticles=pagingData?.collectAsLazyPagingItems()
-            HomeScreenData(lazyArticles = lazyArticles)
+             searchState?.pagingData?.let {
+                 val lazyArticles=it.collectAsLazyPagingItems()
+                 HomeScreenData(lazyArticles = lazyArticles,navController)
+            }
+
 
 
     }
@@ -104,7 +108,7 @@ fun SearchBar(
 }
 
 @Composable
-fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?) {
+fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?, navController: NavHostController) {
     if(lazyArticles==null) return
     val error = if (
         lazyArticles.loadState.append is LoadState.Error)
@@ -126,7 +130,9 @@ fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?) {
         }
 
         else -> {
-            NewsListing(data = lazyArticles)
+            NewsListing(data = lazyArticles){
+              navController.navigate(Route.DetailScreen.routeName)
+            }
         }
     }
 
@@ -134,11 +140,11 @@ fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?) {
 }
 
 @Composable
-fun NewsListing(data: LazyPagingItems<Article>) {
+fun NewsListing(data: LazyPagingItems<Article>,onItemClick:(Article)->Unit) {
     LazyColumn() {
         items(data.itemCount) {
             ArticleCard(modifier = Modifier.fillMaxWidth(), article = data[it]!!) {
-
+              onItemClick.invoke(it)
             }
         }
     }
