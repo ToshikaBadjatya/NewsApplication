@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,9 +23,11 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -76,25 +80,32 @@ fun TopBar(
                     .padding(start = Dimens.DefaultPadding)
                     .clickable { onBackClicked.invoke() },
                 painter = painterResource(id = R.drawable.ic_back_arrow),
-                contentDescription = "back icon"
+                contentDescription = "back icon",
+                tint = Color.DarkGray
             )
         },
         actions = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_bookmark),
                 contentDescription = "back icon",
-                modifier = Modifier.padding(end = Dimens.DefaultPadding),
+                modifier = Modifier.padding(end = Dimens.DefaultPadding)
+                    .clickable { onBookMarkClick.invoke() },
+                tint = Color.DarkGray
             )
             Icon(
-                painter = painterResource(id = R.drawable.ic_search),
+                imageVector = Icons.Default.Share,
                 contentDescription = "back icon",
-                modifier = Modifier.padding(end = Dimens.DefaultPadding),
+                modifier = Modifier.padding(end = Dimens.DefaultPadding)
+                    .clickable { onShareClick.invoke() },
+                tint = Color.DarkGray
             )
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_network),
                 contentDescription = "back icon",
-                modifier = Modifier.padding(end = Dimens.DefaultPadding),
+                modifier = Modifier.padding(end = Dimens.DefaultPadding)
+                    .clickable { onBrowseClick.invoke() },
+                tint = Color.DarkGray
             )
 
         }
@@ -116,7 +127,8 @@ fun ItemDetail(article: Article) {
 
                 AsyncImage(
                     modifier = Modifier
-                        .size(Dimens.ArticleImageHeight)
+                        .fillMaxWidth()
+                        .height(Dimens.ArticleImageHeight)
                         .clip(
                             RoundedCornerShape(20.dp)
                         )
@@ -128,10 +140,13 @@ fun ItemDetail(article: Article) {
                 )
             }
             Text(text = article.title,
-                style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(Dimens.DefaultPaddingSmall))
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(Dimens.DefaultPadding))
             Text(text = article.content,
-                style = MaterialTheme.typography.bodyLarge)
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 10)
         }
     }
 

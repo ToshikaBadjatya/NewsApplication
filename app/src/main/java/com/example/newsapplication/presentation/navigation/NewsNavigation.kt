@@ -5,25 +5,35 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapplication.R
+import com.example.newsapplication.data.remote.pojo.Article
 import com.example.newsapplication.intent.NewsEvents
+import com.example.newsapplication.presentation.home.BookMarkScreen
 import com.example.newsapplication.presentation.home.HomeScreen
+import com.example.newsapplication.presentation.home.ItemDetailScreen
 import com.example.newsapplication.presentation.viewmodel.NewsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,27 +43,43 @@ fun HomeNavigation(modifier: Modifier){
     val navItems=listOf(context.getString(R.string.Home),
         context.getString(R.string.Bookmark),
     )
+    var selectedIndex by rememberSaveable{
+        mutableStateOf<Int>(0)
+    }
+    val navController= rememberNavController()
+
+    val startDestination by remember {
+        derivedStateOf<String> {
+            if(selectedIndex==0){
+                Route.HomeScreen.routeName
+            }
+            else{
+                Route.BookMarkScreen.routeName
+            }
+        }
+    }
+    val icons= listOf(R.drawable.ic_home,R.drawable.ic_bookmark)
     Scaffold(
         modifier = modifier,
         bottomBar ={
-            BottomNavigationBar(items = navItems, modifier = Modifier.fillMaxWidth())
+            BottomNavigationBar(items = navItems,icons, selectedIndex = selectedIndex){
+                selectedIndex=it
+            }
         }
     ) {
-        NewsNavigation(modifier = modifier.padding(it) )
+        NewsNavigation(modifier = modifier.padding(it),navController ,startDestination)
     }
 
 }
 @Composable
-fun NewsNavigation(modifier: Modifier) {
+fun NewsNavigation(modifier: Modifier, navController: NavHostController,start:String) {
 
-    val navController= rememberNavController()
+
     Column(modifier=modifier) {
-
-
         NavHost(
             modifier = Modifier.fillMaxHeight(),
             navController = navController,
-            startDestination = Route.HomeScreen.routeName
+            startDestination = start
         ) {
 
             composable(route = Route.HomeScreen.routeName) {
@@ -61,13 +87,23 @@ fun NewsNavigation(modifier: Modifier) {
                if(newsViewModel._searchText.isEmpty()){
                   newsViewModel.onEvent(NewsEvents.GetNews)
                 }
-                HomeScreen(navController, newsViewModel._searchState.value){
+                HomeScreen(searchState = newsViewModel._searchState.value,
+                    newsEvent = {
                     newsViewModel.onEvent(it)
+                }, goToDetail = {
+                      navController.currentBackStackEntry?.savedStateHandle?.set("article",it)
+                      navController.navigate(Route.DetailScreen.routeName)
+                    })
+            }
+            composable(route=Route.DetailScreen.routeName){
+                val article=  navController.previousBackStackEntry?.savedStateHandle?.get("article") as? Article
+                if (article != null) {
+                    ItemDetailScreen(article = article, navigateUp = {navController.navigateUp()},{})
                 }
             }
-//            composable(route=Route.DetailScreen.routeName){
-////               ItemDetailScreen(navigateUp = {navController.navigateUp()})
-//            }
+            composable(route=Route.BookMarkScreen.routeName){
+               BookMarkScreen()
+            }
         }
 
     }
@@ -78,21 +114,26 @@ fun NewsNavigation(modifier: Modifier) {
 }
 
 @Composable
-fun BottomNavigationBar(items: List<String>, modifier: Modifier){
-    var selectedIndex by remember{
-        mutableStateOf<Int>(0)
-    }
+fun BottomNavigationBar(items: List<String>,icons:List<Int>,selectedIndex:Int,onClick:(Int)->Unit){
+
     NavigationBar(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = MaterialTheme.colorScheme.background,
+
     ) {
        items.forEachIndexed { index, item ->
            NavigationBarItem(
-               icon = {},
-//               icon = { Icon(imageVector = icons[index], contentDescription =item ) },
+               icon = { Icon(painter = painterResource(id =icons[index] ), contentDescription ="" )},
                label = { Text(item) },
                selected = selectedIndex == index,
-               onClick = { selectedIndex = index }
+               onClick = { onClick.invoke(index)},
+               colors = NavigationBarItemDefaults.colors(
+                   selectedIconColor = MaterialTheme.colorScheme.primary,
+                   selectedTextColor = MaterialTheme.colorScheme.primary,
+                   indicatorColor = MaterialTheme.colorScheme.background,
+                   unselectedIconColor = colorResource(id = R.color.body),
+                   unselectedTextColor = colorResource(id = R.color.body),
+               )
            )
        }
 }}

@@ -17,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -42,9 +40,10 @@ import com.example.newsapplication.presentation.viewmodel.SearchState
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
+
     searchState: SearchState,
-    newsEvent: (NewsEvents)->Unit
+    newsEvent: (NewsEvents)->Unit,
+    goToDetail: (Article)->Unit,
 ) {
     var searchText by remember {
         mutableStateOf("")
@@ -66,7 +65,7 @@ fun HomeScreen(
             onTextChange = { searchText = it })
              searchState?.pagingData?.let {
                  val lazyArticles=it.collectAsLazyPagingItems()
-                 HomeScreenData(lazyArticles = lazyArticles,navController)
+                 HomeScreenData(lazyArticles = lazyArticles,goToDetail)
             }
 
 
@@ -108,7 +107,7 @@ fun SearchBar(
 }
 
 @Composable
-fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?, navController: NavHostController) {
+fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?, goToDetail: (Article) -> Unit) {
     if(lazyArticles==null) return
     val error = if (
         lazyArticles.loadState.append is LoadState.Error)
@@ -130,9 +129,7 @@ fun HomeScreenData(lazyArticles: LazyPagingItems<Article>?, navController: NavHo
         }
 
         else -> {
-            NewsListing(data = lazyArticles){
-              navController.navigate(Route.DetailScreen.routeName)
-            }
+            NewsListing(data = lazyArticles,goToDetail)
         }
     }
 
