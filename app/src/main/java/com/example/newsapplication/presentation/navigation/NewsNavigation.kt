@@ -2,9 +2,13 @@ package com.example.newsapplication.presentation.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,9 +26,26 @@ import com.example.newsapplication.intent.NewsEvents
 import com.example.newsapplication.presentation.home.HomeScreen
 import com.example.newsapplication.presentation.viewmodel.NewsViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeNavigation(modifier: Modifier){
+    val context= LocalContext.current
+    val navItems=listOf(context.getString(R.string.Home),
+        context.getString(R.string.Bookmark),
+    )
+    Scaffold(
+        modifier = modifier,
+        bottomBar ={
+            BottomNavigationBar(items = navItems, modifier = Modifier.fillMaxWidth())
+        }
+    ) {
+        NewsNavigation(modifier = modifier.padding(it) )
+    }
+
+}
 @Composable
 fun NewsNavigation(modifier: Modifier) {
-    val context= LocalContext.current
+
     val navController= rememberNavController()
     Column(modifier=modifier) {
 
@@ -50,10 +71,7 @@ fun NewsNavigation(modifier: Modifier) {
         }
 
     }
-    val navItems=listOf(context.getString(R.string.Home),
-        context.getString(R.string.Search),
-        context.getString(R.string.Bookmark),
-    )
+
 //    BottomNavigationBar(navItems,Modifier.fillMaxHeight(0.1f))
 
 

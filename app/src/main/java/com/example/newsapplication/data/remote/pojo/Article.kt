@@ -12,7 +12,7 @@ data class NewsResponse(
     val totalResults: Int
 ):Parcelable
 @Parcelize
-@Entity
+@Entity(tableName = "article_database")
 data class Article(
     val author: String,
     val content: String,

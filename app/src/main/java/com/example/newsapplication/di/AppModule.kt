@@ -2,6 +2,8 @@ package com.example.newsapplication.di
 
 import android.app.Application
 import com.example.newsapplication.Constants
+import com.example.newsapplication.data.local.ArticleDao
+import com.example.newsapplication.data.local.ArticleDb
 import com.example.newsapplication.data.manager.GetNewsImpl
 import com.example.newsapplication.data.manager.LocalUserManagerImpl
 import com.example.newsapplication.data.remote.api.GetNewsApi
@@ -65,7 +67,11 @@ class AppModule {
         }
         return OkHttpClient().newBuilder().addInterceptor(interceptor).build()
     }
-
+    @Provides
+    @Singleton
+    fun getNewsDao(application: Application): ArticleDao {
+        return ArticleDb.getInstance(application).articleDao()
+    }
 
 
 

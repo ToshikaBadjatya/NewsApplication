@@ -22,7 +22,7 @@ fun Navgraph(modifier: Modifier, onBoardingViewModel: OnBoardingViewModel){
           }
       }
         composable(route=Route.NewsNavigation.routeName){
-            NewsNavigation(modifier)
+            HomeNavigation(modifier)
         }
     }
 }
