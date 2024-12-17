@@ -22,15 +22,10 @@ data class SearchState( val pagingData: Flow<PagingData<Article>> ?=null)
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(private val newsUseCase: NewsUseCase) : ViewModel() {
-     val news = newsUseCase.getNewsUsecase.getNews(
-        sources = listOf("bbc-news", "abc-news", "al-jazeera-english")
-    ).cachedIn(viewModelScope)
-
     private val searchText= mutableStateOf<String>("")
     val _searchText = searchText.value
     private val searchState = mutableStateOf<SearchState>(SearchState())
     val _searchState : State<SearchState> = searchState
-
 
     fun onEvent(event: NewsEvents) {
         when (event) {
@@ -43,6 +38,9 @@ class NewsViewModel @Inject constructor(private val newsUseCase: NewsUseCase) : 
             }
 
             is NewsEvents.GetNews -> {
+                val news = newsUseCase.getNewsUsecase.getNews(
+                    sources = listOf("bbc-news", "abc-news", "al-jazeera-english")
+                ).cachedIn(viewModelScope)
                 searchState.value=SearchState( pagingData = news)
             }
 

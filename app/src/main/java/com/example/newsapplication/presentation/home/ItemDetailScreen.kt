@@ -9,18 +9,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -35,30 +35,43 @@ import com.example.newsapplication.R
 import com.example.newsapplication.data.remote.pojo.Article
 import com.example.newsapplication.intent.DetailEvents
 import com.example.newsapplication.presentation.Dimens
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun ItemDetailScreen(article: Article,navigateUp: () -> Unit,onEvent:(DetailEvents)->Unit) {
+fun ItemDetailScreen(
+    article: Article,
+    navigateUp: () -> Unit,
+    bookMarkedAlready: Boolean,
+    onEvent: (DetailEvents) -> Unit,
+
+    ) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
+            bookMarkedAlready = bookMarkedAlready,
             onBackClicked = { navigateUp.invoke() },
             onBookMarkClick = {
-               onEvent.invoke(DetailEvents.SaveItem(article))
+                onEvent.invoke(DetailEvents.SaveItem(article))
             },
             onShareClick = {
                 val intent = Intent(Intent.ACTION_SEND)
-                intent.type ="text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT,article.url)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT, article.url)
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
                 }
-                           },
+            },
             onBrowseClick = {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(article.url)
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
                 }
+            },
+            onDeleteClick = {
+                onEvent.invoke(DetailEvents.DeleteArticle(article))
+
             })
         ItemDetail(article = article)
     }
@@ -70,7 +83,9 @@ fun TopBar(
     onBackClicked: () -> Unit,
     onBookMarkClick: () -> Unit,
     onShareClick: () -> Unit,
-    onBrowseClick: () -> Unit
+    onBrowseClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    bookMarkedAlready: Boolean
 ) {
     TopAppBar(title = { },
         modifier = Modifier.fillMaxWidth(),
@@ -85,17 +100,36 @@ fun TopBar(
             )
         },
         actions = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_bookmark),
-                contentDescription = "back icon",
-                modifier = Modifier.padding(end = Dimens.DefaultPadding)
-                    .clickable { onBookMarkClick.invoke() },
-                tint = Color.DarkGray
-            )
+            if (!bookMarkedAlready) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bookmark),
+                    contentDescription = "back icon",
+                    modifier = Modifier
+                        .padding(end = Dimens.DefaultPadding)
+                        .clickable { onBookMarkClick.invoke() },
+                    tint = Color.DarkGray
+                )
+            }
+            else{
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "back icon",
+                    modifier = Modifier
+                        .padding(end = Dimens.DefaultPadding)
+                        .clickable {
+                            onDeleteClick.invoke()
+                            onBackClicked.invoke()
+
+                        },
+                    tint = Color.DarkGray
+                )
+            }
+
             Icon(
                 imageVector = Icons.Default.Share,
                 contentDescription = "back icon",
-                modifier = Modifier.padding(end = Dimens.DefaultPadding)
+                modifier = Modifier
+                    .padding(end = Dimens.DefaultPadding)
                     .clickable { onShareClick.invoke() },
                 tint = Color.DarkGray
             )
@@ -103,7 +137,8 @@ fun TopBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_network),
                 contentDescription = "back icon",
-                modifier = Modifier.padding(end = Dimens.DefaultPadding)
+                modifier = Modifier
+                    .padding(end = Dimens.DefaultPadding)
                     .clickable { onBrowseClick.invoke() },
                 tint = Color.DarkGray
             )
@@ -139,14 +174,17 @@ fun ItemDetail(article: Article) {
                     contentScale = ContentScale.FillBounds
                 )
             }
-            Text(text = article.title,
+            Text(
+                text = article.title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(Dimens.DefaultPadding))
-            Text(text = article.content,
+            Text(
+                text = article.content,
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 10)
+                maxLines = 10
+            )
         }
     }
 

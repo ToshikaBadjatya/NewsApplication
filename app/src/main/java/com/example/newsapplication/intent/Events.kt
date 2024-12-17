@@ -12,4 +12,7 @@ sealed class NewsEvents{
 }
 sealed class DetailEvents{
     data class SaveItem(val article: Article):DetailEvents()
+    data class DeleteArticle(val article: Article):DetailEvents()
+
+    object GetItems:DetailEvents()
 }

@@ -4,11 +4,14 @@ import android.app.Application
 import com.example.newsapplication.Constants
 import com.example.newsapplication.data.local.ArticleDao
 import com.example.newsapplication.data.local.ArticleDb
+import com.example.newsapplication.data.manager.BookMarkImpl
 import com.example.newsapplication.data.manager.GetNewsImpl
 import com.example.newsapplication.data.manager.LocalUserManagerImpl
 import com.example.newsapplication.data.remote.api.GetNewsApi
+import com.example.newsapplication.domain.BookmarkRepo
 import com.example.newsapplication.domain.GetNewsRepository
 import com.example.newsapplication.domain.LocalUserManager
+import com.example.newsapplication.domain.usecases.BookMarkUseCase
 import com.example.newsapplication.domain.usecases.EntryUseCases
 import com.example.newsapplication.domain.usecases.GetNewsUsecase
 import com.example.newsapplication.domain.usecases.NewsUseCase
@@ -42,13 +45,18 @@ class AppModule {
     }
     @Provides
     @Singleton
-    fun getNewsUseCase(newsRepo: GetNewsRepository): NewsUseCase {
-        return NewsUseCase(GetNewsUsecase(newsRepo), SearchNewsUsecase(newsRepo))
+    fun getNewsUseCase(newsRepo: GetNewsRepository,bookmarkRepo: BookmarkRepo): NewsUseCase {
+        return NewsUseCase(GetNewsUsecase(newsRepo), SearchNewsUsecase(newsRepo), BookMarkUseCase(bookmarkRepo))
     }
     @Provides
     @Singleton
     fun getNewsRepo(newsApi: GetNewsApi): GetNewsRepository {
         return GetNewsImpl(newsApi)
+    }
+    @Provides
+    @Singleton
+    fun getBookMarkRepoRepo(articleDao: ArticleDao): BookmarkRepo {
+        return BookMarkImpl(articleDao)
     }
     @Provides
     @Singleton
