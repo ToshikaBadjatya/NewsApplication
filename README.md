@@ -1,8 +1,8 @@
-**NewApplication**
+****NewApplication****
 
 NewApplication is an Android application developed using modern development practices and tools. It leverages Jetpack Compose for UI, Kotlin as the programming language, Room for local database management, a REST API for fetching remote data, dependency injection for better modularity and testability, and follows the MVVM architecture pattern.
 
-**Features**
+****Features****
 
 **Fetch Latest News:** Retrieve real-time news details from a remote source.
 
@@ -10,7 +10,7 @@ NewApplication is an Android application developed using modern development prac
 
 **Bookmark News:** Save articles for offline access and revisit them anytime.
 
-**Tech Stack**
+****Tech Stack****
 
 **Kotlin:** The primary programming language.
 
